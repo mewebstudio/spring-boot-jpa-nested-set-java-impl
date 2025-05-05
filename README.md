@@ -11,4 +11,3 @@ docker-compose up --build -d
 
 ### Postman collection
 - [Postman Collection](https://github.com/mewebstudio/spring-boot-jpa-nested-set-java-impl/blob/main/src/main/resources/NesetSet.postman_collection.json)
-- 
