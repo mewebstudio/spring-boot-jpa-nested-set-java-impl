@@ -29,7 +29,6 @@
     <properties>
         <java.version>17</java.version>
         <ulid-creator.version>5.2.3</ulid-creator.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
         <spring-boot-jpa-nested-set.version>0.1.1</spring-boot-jpa-nested-set.version>
     </properties>
     <dependencies>
@@ -53,11 +52,6 @@
             <groupId>com.github.f4b6a3</groupId>
             <artifactId>ulid-creator</artifactId>
             <version>${ulid-creator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mewebstudio</groupId>
