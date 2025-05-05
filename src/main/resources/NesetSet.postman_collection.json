@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "0ece6050-188a-4546-8759-6ff3df54dcd6",
+		"name": "NesetSet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2079870",
+		"_collection_link": "https://lunar-capsule-667882.postman.co/workspace/Team-Workspace~4a00e7a1-03fc-466b-82c8-45cf6f1cd4c6/collection/2079870-0ece6050-188a-4546-8759-6ff3df54dcd6?action=share&source=collection_link&creator=2079870"
+	},
+	"item": [
+		{
+			"name": "Move",
+			"item": [
+				{
+					"name": "Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/categories/01JTH6HMSXWTWV45ZF0HKYE6BB/up",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"categories",
+								"01JTH6HMSXWTWV45ZF0HKYE6BB",
+								"up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Down",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/categories/01JTH6HMSXWTWV45ZF0HKYE6BB/down",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"categories",
+								"01JTH6HMSXWTWV45ZF0HKYE6BB",
+								"down"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tree",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/categories/tree",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"categories",
+								"tree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ancestors by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/categories/ancestors/01JTH6MXWEK0YFNY3WFXCCE5W3",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"categories",
+								"ancestors",
+								"01JTH6MXWEK0YFNY3WFXCCE5W3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Descendants by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/categories/descendants/01JTH6MXWEK0YFNY3WFXCCE5W3",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"categories",
+								"descendants",
+								"01JTH6MXWEK0YFNY3WFXCCE5W3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test - 2 - C - Z\",\n    \"parentId\": \"01JTH6MXWEK0YFNY3WFXCCE5W3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/categories",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/categories/01JT7540732WG6B87GTH637FG7",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"categories",
+						"01JT7540732WG6B87GTH637FG7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test - 2 - C - Z\",\n    \"parentId\": \"01JTH6MXWEK0YFNY3WFXCCE5W3\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/categories/01JTH6PFZVZ77KME0CXWENJMDW",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"categories",
+						"01JTH6PFZVZ77KME0CXWENJMDW"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rebuild Tree",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/categories",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/categories/01JTH6HMSXWTWV45ZF0HKYE6BB",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"categories",
+						"01JTH6HMSXWTWV45ZF0HKYE6BB"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

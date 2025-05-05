@@ -1,0 +1,55 @@
+server:
+  port: ${APP_SERVER_PORT:8080}
+  servlet:
+    context-path: ${APP_SERVER_SERVLET_CONTEXT_PATH:/}
+
+spring:
+  application:
+    name: ${APP_NAME:nested-set}
+  jpa:
+    hibernate:
+      ddl-auto: ${DB_DDL_AUTO:update}
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        globally_quoted_identifiers: true
+        enable_lazy_load_no_trans: true
+        jdbc:
+          batch_size: 50
+          lob:
+            non_contextual_creation: true
+    open-in-view: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_DB:app}
+    username: ${POSTGRESQL_USER:postgres}
+    password: ${POSTGRESQL_PASSWORD:secret}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ${MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS:always}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    org:
+      springframework:
+        web: ${LOGGING_LEVEL_SPRING:INFO}
+        web.servlet.DispatcherServlet: ${LOGGING_LEVEL_SPRING_DISPATCHER_SERVLET:INFO}
+      hibernate:
+        type: ${LOGGING_LEVEL_HIBERNATE:INFO}
+        SQL: ${LOGGING_LEVEL_HIBERNATE_SQL:INFO}
+      transaction: ${LOGGING_LEVEL_TRANSACTION:INFO}
+  file:
+    name: ./var/logs/app.log
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+  logback:
+    rollingpolicy:
+      file-name-pattern: ./var/logs/app.%d{yyyy-MM-dd}.%i.log
