@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
     name = "categories",
     uniqueConstraints = @UniqueConstraint(columnNames = "name", name = "uk_categories_name")
 )
-public class Category extends AbstractBaseEntity implements INestedSetNode<String> {
+public class Category extends AbstractBaseEntity implements INestedSetNode<String, Category> {
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -35,6 +35,7 @@ public class Category extends AbstractBaseEntity implements INestedSetNode<Strin
         this.parent = parent;
     }
 
+    @Override
     public String getId() {
         return super.getId();
     }
@@ -47,32 +48,44 @@ public class Category extends AbstractBaseEntity implements INestedSetNode<Strin
         this.name = name;
     }
 
+    @Override
     public int getLeft() {
         return left;
     }
 
+    @Override
     public void setLeft(int left) {
         this.left = left;
     }
 
+    @Override
     public int getRight() {
         return right;
     }
 
+    @Override
     public void setRight(int right) {
         this.right = right;
     }
 
+    @Override
     public Category getParent() {
         return parent;
     }
 
-    public void setParent(INestedSetNode<String> parent) {
+    @Override
+    public void setParent(INestedSetNode<String, Category> parent) {
         this.parent = (Category) parent;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "(id = " + getId() + ", name = " + name + ", left = " + left + ", right = " + right + ", parent = " + parent + ")";
+        return this.getClass().getSimpleName()
+            + "(id = " + getId()
+            + ", name = " + name
+            + ", left = " + left
+            + ", right = " + right
+            + ", parent = " + (parent != null ? parent.getId() : null)
+            + ")";
     }
 }

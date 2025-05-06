@@ -7,7 +7,6 @@ import com.mewebstudio.nestedset.repository.CategoryRepository;
 import com.mewebstudio.nestedset.exception.BadRequestException;
 import com.mewebstudio.nestedset.exception.NotFoundException;
 import com.mewebstudio.springboot.jpa.nestedset.AbstractNestedSetService;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -69,23 +68,43 @@ public class CategoryService extends AbstractNestedSetService<Category, String> 
      */
     @Transactional
     public Category create(CreateCategoryRequest request) {
-        // Find parent category if parentId is provided
+        if (categoryRepository.existsByName(request.getName())) {
+            throw new BadRequestException("Category with name " + request.getName() + " already exists");
+        }
+
         Category parent = null;
         if (request.getParentId() != null) {
             parent = categoryRepository.findById(request.getParentId())
                 .orElseThrow(() -> new NotFoundException("Parent not found"));
         }
 
-        // Create node and get left and right values
-        Pair<Integer, Integer> nodePositions = createNode(categoryRepository.findAllOrderedByLeft(), parent);
-        int newLeft = nodePositions.getLeft();
-        int newRight = nodePositions.getRight();
+        Category category = new Category(request.getName(), 0, 0, parent);
+        return createNode(category);
+    }
 
-        // Save and return the new category
-        Category newCategory = new Category(request.getName(), newLeft, newRight, parent);
-        Category savedCategory = categoryRepository.save(newCategory);
-        log.info("Created: {}", savedCategory);
-        return savedCategory;
+    /**
+     * Update the name and/or parent of a category.
+     *
+     * @param id      The ID of the category to update.
+     * @param request The request containing the new name and optional parent ID.
+     * @return The updated category.
+     * @throws NotFoundException   if the category or parent category is not found.
+     * @throws BadRequestException if a cyclic reference is detected.
+     */
+    @Transactional
+    public Category update(String id, UpdateCategoryRequest request) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Category not found"));
+
+        Category parent = null;
+        if (request.getParentId() != null) {
+            parent = categoryRepository.findById(request.getParentId())
+                .orElseThrow(() -> new NotFoundException("Parent not found"));
+        }
+
+        category.setName(request.getName());
+
+        return updateNode(category, parent);
     }
 
     /**
@@ -96,14 +115,10 @@ public class CategoryService extends AbstractNestedSetService<Category, String> 
      */
     @Transactional
     public void delete(String id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() ->
-            new NotFoundException("Category not found"));
-        int width = category.getRight() - category.getLeft() + 1;
-
-        // Delete the subtree
-        List<Category> subtree = categoryRepository.findSubtree(category.getLeft(), category.getRight());
-        categoryRepository.deleteAll(subtree);
-        closeGapInTree(category, width, categoryRepository.findAllOrderedByLeft());
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Category not found"));
+        deleteNode(category);
+        log.info("Deleted: {}", id);
     }
 
     /**
@@ -116,54 +131,5 @@ public class CategoryService extends AbstractNestedSetService<Category, String> 
     public List<Category> getSubtree(String id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         return categoryRepository.findSubtree(category.getLeft(), category.getRight());
-    }
-
-    /**
-     * Update the name and/or parent of a category.
-     *
-     * @param id      String The ID of the category to update.
-     * @param request UpdateCategoryRequest The request containing the new name and optional parent ID.
-     * @return Category The updated category.
-     * @throws NotFoundException   if the category is not found.
-     * @throws BadRequestException if the category is not found or if a cyclic reference is detected.
-     */
-    @Transactional
-    public Category update(String id, UpdateCategoryRequest request) {
-        // Fetch the category to update
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
-
-        // Set the new name
-        category.setName(request.getName());
-
-        // Handle parent change if parentId is provided
-        if (request.getParentId() != null) {
-            // Determine the new parent
-            Category newParent = request.getParentId().isEmpty() ? null :
-                categoryRepository.findById(request.getParentId()).orElseThrow(() -> new NotFoundException("New parent not found"));
-
-            // Check for cyclic reference and move category
-            if (newParent != null && isDescendant(category, newParent)) {
-                throw new BadRequestException("Cannot move category under its own descendant");
-            }
-
-            int distance = category.getRight() - category.getLeft() + 1;
-            List<Category> allCategories = categoryRepository.findAllOrderedByLeft();
-            closeGapInTree(category, distance, allCategories);
-
-            // Calculate new left and right positions
-            Pair<Integer, Integer> nodePositions = createNode(allCategories, newParent);
-            int newLeft = nodePositions.getLeft();
-            int newRight = nodePositions.getRight();
-
-            // Update category with new parent and position
-            category.setParent(newParent);
-            category.setLeft(newLeft);
-            category.setRight(newRight);
-        }
-
-        // Save and return updated category
-        Category savedCategory = categoryRepository.save(category);
-        log.info("Updated: {}", savedCategory);
-        return savedCategory;
     }
 }
